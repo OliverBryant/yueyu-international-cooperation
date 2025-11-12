@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>青岛悦途国际经济技术合作有限公司</title>
+    <style>
+        /* 基础样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        ul {
+            list-style: none;
+        }
+        
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 10px 25px;
+            background-color: #e60012;
+            color: #fff;
+            border-radius: 4px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .btn:hover {
+            background-color: #c4000f;
+        }
+        
+        /* 头部样式 */
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 50px;
+        }
+        
+        .logo h1 {
+            font-size: 24px;
+            margin-left: 10px;
+            color: #2c3e50;
+        }
+        
+        .logo span {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-left: 5px;
+        }
+        
+        .header-contact {
+            text-align: right;
+        }
+        
+        .header-contact .phone {
+            font-size: 20px;
+            font-weight: bold;
+            color: #e60012;
+        }
+        
+        .header-contact .email {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        
+        nav {
+            background-color: #2c3e50;
+        }
+        
+        nav ul {
+            display: flex;
+        }
+        
+        nav ul li {
+            position: relative;
+        }
+        
+        nav ul li a {
+            display: block;
+            padding: 15px 25px;
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        nav ul li a:hover, nav ul li a.active {
+            background-color: #e60012;
+        }
+        
+        /* 轮播图 */
+        .banner {
+            height: 500px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+        
+        .banner-slide {
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+        }
+        
+        .banner-content {
+            width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+            color: #fff;
+        }
+        
+        .banner-content h2 {
+            font-size: 42px;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+        
+        .banner-content p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            max-width: 600px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        /* 关于我们 */
+        .about {
+            padding: 60px 0;
+            background-color: #fff;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .section-title h2 {
+            font-size: 32px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background-color: #e60012;
+        }
+        
+        .section-title p {
+            color: #7f8c8d;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+        
+        .about-img {
+            flex: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .about-img img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .about-text {
+            flex: 1;
+        }
+        
+        .about-text h3 {
+            font-size: 24px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .about-text p {
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+        
+        /* 服务项目 */
+        .services {
+            padding: 60px 0;
+            background-color: #f8f9fa;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        
+        .service-item {
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .service-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .service-icon {
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fa;
+            font-size: 36px;
+            color: #e60012;
+        }
+        
+        .service-content {
+            padding: 25px;
+        }
+        
+        .service-content h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .service-content p {
+            color: #7f8c8d;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        /* 成功案例 */
+        .cases {
+            padding: 60px 0;
+            background-color: #fff;
+        }
+        
+        .case-filter {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+        
+        .filter-btn {
+            padding: 8px 20px;
+            margin: 0 5px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background-color: #e60012;
+            color: #fff;
+            border-color: #e60012;
+        }
+        
+        .case-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        
+        .case-item {
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .case-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .case-img {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .case-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .case-item:hover .case-img img {
+            transform: scale(1.05);
+        }
+        
+        .case-content {
+            padding: 20px;
+        }
+        
+        .case-content h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .case-content p {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .case-tag {
+            display: inline-block;
+            padding: 3px 10px;
+            background-color: #ecf0f1;
+            color: #7f8c8d;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        
+        /* 新闻资讯 */
+        .news {
+            padding: 60px 0;
+            background-color: #f8f9fa;
+        }
+        
+        .news-container {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .news-main {
+            flex: 2;
+        }
+        
+        .news-sidebar {
+            flex: 1;
+        }
+        
+        .news-item {
+            display: flex;
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .news-date {
+            width: 70px;
+            text-align: center;
+            margin-right: 20px;
+        }
+        
+        .news-date .day {
+            font-size: 30px;
+            font-weight: bold;
+            color: #e60012;
+            line-height: 1;
+        }
+        
+        .news-date .month {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        
+        .news-content h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .news-content p {
+            color: #7f8c8d;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .news-links {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .news-links h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            color: #2c3e50;
+        }
+        
+        .news-links ul li {
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed #eee;
+        }
+        
+        .news-links ul li:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .news-links ul li a {
+            display: flex;
+            justify-content: space-between;
+            transition: color 0.3s;
+        }
+        
+        .news-links ul li a:hover {
+            color: #e60012;
+        }
+        
+        .news-links ul li a span {
+            color: #7f8c8d;
+            font-size: 13px;
+        }
+        
+        /* 合作伙伴 */
+        .partners {
+            padding: 60px 0;
+            background-color: #fff;
+        }
+        
+        .partners-slider {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .partner-item {
+            width: 16%;
+            text-align: center;
+            margin-bottom: 30px;
+            filter: grayscale(100%);
+            opacity: 0.7;
+            transition: all 0.3s;
+        }
+        
+        .partner-item:hover {
+            filter: grayscale(0);
+            opacity: 1;
+        }
+        
+        .partner-item img {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        /* 底部 */
+        footer {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 50px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #fff;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: #e60012;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: #bdc3c7;
+            transition: color 0.3s;
+        }
+        
+        .footer-column ul li a:hover {
+            color: #e60012;
+        }
+        
+        .contact-info li {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        
+        .contact-info li i {
+            width: 20px;
+            margin-right: 10px;
+            color: #e60012;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #34495e;
+            color: #95a5a6;
+            font-size: 14px;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .container {
+                width: 100%;
+            }
+            
+            .banner-content {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .about-content {
+                flex-direction: column;
+            }
+            
+            .services-grid, .case-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .news-container {
+                flex-direction: column;
+            }
+            
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .partner-item {
+                width: 30%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-top {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .header-contact {
+                margin-top: 15px;
+                text-align: center;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .banner {
+                height: 400px;
+            }
+            
+            .banner-content h2 {
+                font-size: 32px;
+            }
+            
+            .services-grid, .case-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .partner-item {
+                width: 48%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部 -->
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <div class="logo">
+                    <img src="https://via.placeholder.com/150x50?text=SYNDICATE" alt="青岛悦途国际经济技术合作有限公司">
+                    <div>
+                        <h1>青岛悦途国际经济技术合作有限公司</h1>
+                        <span>Qingdao Syndicate International Economic & Technical Cooperation Co., Ltd.</span>
+                    </div>
+                </div>
+                <div class="header-contact">
+                    <div class="phone">0532-81978007</div>
+                    <div class="email">syndicate_2008@yahoo.com</div>
+                </div>
+            </div>
+        </div>
+        <nav>
+            <div class="container">
+                <ul>
+                    <li><a href="#" class="active">首页</a></li>
+                    <li><a href="#">关于我们</a></li>
+                    <li><a href="#">服务项目</a></li>
+                    <li><a href="#">成功案例</a></li>
+                    <li><a href="#">新闻资讯</a></li>
+                    <li><a href="#">出国指南</a></li>
+                    <li><a href="#">合作伙伴</a></li>
+                    <li><a href="#">联系我们</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 轮播图 -->
+    <section class="banner">
+        <div class="banner-slide" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://via.placeholder.com/1920x500?text=国际劳务合作')">
+            <div class="banner-content">
+                <h2>专业国际劳务合作服务</h2>
+                <p>成立于2020年，致力于向全球多个国家和地区派遣各类技术人员和服务人员</p>
+                <a href="#" class="btn">了解更多</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 关于我们 -->
+    <section class="about">
+        <div class="container">
+            <div class="section-title">
+                <h2>关于我们</h2>
+                <p>专业、可靠、高效的对外劳务合作服务商</p>
+            </div>
+            <div class="about-content">
+                <div class="about-img">
+                    <img src="https://via.placeholder.com/600x400?text=公司简介" alt="关于我们">
+                </div>
+                <div class="about-text">
+                    <h3>青岛悦途国际经济技术合作有限公司</h3>
+                    <p>公司成立于2020年1月，是经国家商务部批准的从事对外劳务合作的专业公司。公司拥有《对外劳务合作（外派劳务）经营资格证书》，致力于向全球各国派遣各类工程师、技术工人、医护人员及服务人员。</p>
+                    <p>自成立以来，公司已同澳大利亚、日本、新加坡、新西兰、加拿大、韩国、俄罗斯等国家和地区的相关机构、公司、协会建立了长期稳定的合作关系</p>
+                    <a href="#" class="btn">了解更多</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 服务项目 -->
+    <section class="services">
+        <div class="container">
+            <div class="section-title">
+                <h2>服务项目</h2>
+                <p>专业、全面的国际人力资源服务</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i>🌍</i>
+                    </div>
+                    <div class="service-content">
+                        <h3>对外劳务合作</h3>
+                        <p>向境外派遣各类工程师、技术工人、医护人员及服务人员，涵盖多个行业和领域</p>
+                    </div>
+                </div>
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i>👨‍🍳</i>
+                    </div>
+                    <div class="service-content">
+                        <h3>技能人才派遣</h3>
+                        <p>专业派遣厨师、护理人员、酒店服务人员、建筑工人等各类技能人才</p>
+                    </div>
+                </div>
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i>🎓</i>
+                    </div>
+                    <div class="service-content">
+                        <h3>出国培训服务</h3>
+                        <p>提供语言培训、技能培训、文化适应培训等全方位出国前培训服务</p>
+                    </div>
+                </div>
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i>📝</i>
+                    </div>
+                    <div class="service-content">
+                        <h3>签证及手续办理</h3>
+                        <p>专业办理工作签证、护照及其他相关出国手续，确保流程顺利</p>
+                    </div>
+                </div>
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i>🏢</i>
+                    </div>
+                    <div class="service-content">
+                        <h3>人力资源咨询</h3>
+                        <p>为企业和个人提供专业的人力资源咨询服务，包括职业规划、跨国就业指导等。</p>
+                    </div>
+                </div>
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i>✈️</i>
+                    </div>
+                    <div class="service-content">
+                        <h3>境外就业安置</h3>
+                        <p>提供境外工作安排、接机、住宿安排等一站式境外就业安置服务。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 成功案例 -->
+    <section class="cases">
+        <div class="container">
+            <div class="section-title">
+                <h2>成功案例</h2>
+                <p>我们在全球多个国家和地区的成功派遣经验</p>
+            </div>
+            <div class="case-filter">
+                <button class="filter-btn active">全部</button>
+                <button class="filter-btn">澳大利亚</button>
+                <button class="filter-btn">日本</button>
+                <button class="filter-btn">新加坡</button>
+                <button class="filter-btn">新西兰</button>
+                <button class="filter-btn">加拿大</button>
+                <button class="filter-btn">俄罗斯</button>
+            </div>
+            <div class="case-grid">
+                <div class="case-item">
+                    <div class="case-img">
+                        <img src="https://via.placeholder.com/400x250?text=澳大利亚项目" alt="澳大利亚厨师派遣项目">
+                    </div>
+                    <div class="case-content">
+                        <h3>澳大利亚厨师派遣项目</h3>
+                        <p>成功向澳大利亚多家星级酒店和餐厅派遣中餐厨师，获得雇主一致好评。</p>
+                        <span class="case-tag">澳大利亚</span>
+                    </div>
+                </div>
+                <div class="case-item">
+                    <div class="case-img">
+                        <img src="https://via.placeholder.com/400x250?text=日本项目" alt="日本技术研修生项目">
+                    </div>
+                    <div class="case-content">
+                        <h3>日本技术研修生项目</h3>
+                        <p>与日本多家企业合作，派遣制造业技术工人，促进中日技术交流。</p>
+                        <span class="case-tag">日本</span>
+                    </div>
+                </div>
+                <div class="case-item">
+                    <div class="case-img">
+                        <img src="https://via.placeholder.com/400x250?text=新加坡项目" alt="新加坡医护人才派遣">
+                    </div>
+                    <div class="case-content">
+                        <h3>新加坡医护人才派遣</h3>
+                        <p>向新加坡多家医疗机构派遣护理人员，填补当地医护人力缺口。</p>
+                        <span class="case-tag">新加坡</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 新闻资讯 -->
+    <section class="news">
+        <div class="container">
+            <div class="section-title">
+                <h2>新闻资讯</h2>
+                <p>了解最新行业动态和公司新闻</p>
+            </div>
+            <div class="news-container">
+                <div class="news-main">
+                    <div class="news-item">
+                        <div class="news-date">
+                            <div class="day">15</div>
+                            <div class="month">2023.10</div>
+                        </div>
+                        <div class="news-content">
+                            <h3>公司荣获"2023年度对外劳务合作优秀企业"称号</h3>
+                            <p>在近日举行的全国对外劳务合作行业评选中，我公司凭借良好的信誉和专业的服务，荣获"2023年度对外劳务合作优秀企业"称号...</p>
+                        </div>
+                    </div>
+                    <div class="news-item">
+                        <div class="news-date">
+                            <div class="day">28</div>
+                            <div class="month">2023.09</div>
+                        </div>
+                        <div class="news-content">
+                            <h3>澳大利亚482签证项目说明会成功举办</h3>
+                            <p>上周六，我公司在总部成功举办了澳大利亚482工作签证项目说明会，吸引了近百名有意向赴澳工作的技术人员参加...</p>
+                        </div>
+                    </div>
+                    <div class="news-item">
+                        <div class="news-date">
+                            <div class="day">05</div>
+                            <div class="month">2023.09</div>
+                        </div>
+                        <div class="news-content">
+                            <h3>日本技能实习项目新增合作企业</h3>
+                            <p>近日，我公司与日本多家制造业企业达成合作，新增200个技能实习名额，涵盖机械加工、电子装配等多个工种...</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="news-sidebar">
+                    <div class="news-links">
+                        <h3>出国指南</h3>
+                        <ul>
+                            <li><a href="#">澳大利亚工作签证申请流程 <span>2023-08-20</span></a></li>
+                            <li><a href="#">日本技能实习制度详解 <span>2023-08-15</span></a></li>
+                            <li><a href="#">新加坡就业环境与薪资水平 <span>2023-08-10</span></a></li>
+                            <li><a href="#">出国前培训的重要性 <span>2023-08-05</span></a></li>
+                            <li><a href="#">海外工作适应指南 <span>2023-07-28</span></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 合作伙伴 -->
+    <section class="partners">
+        <div class="container">
+            <div class="section-title">
+                <h2>合作伙伴</h2>
+                <p>与全球20多个国家和地区的企业建立长期合作关系</p>
+            </div>
+            <div class="partners-slider">
+                <div class="partner-item">
+                    <img src="https://via.placeholder.com/150x80?text=澳大利亚" alt="澳大利亚合作伙伴">
+                </div>
+                <div class="partner-item">
+                    <img src="https://via.placeholder.com/150x80?text=日本" alt="日本合作伙伴">
+                </div>
+                <div class="partner-item">
+                    <img src="https://via.placeholder.com/150x80?text=新加坡" alt="新加坡合作伙伴">
+                </div>
+                <div class="partner-item">
+                    <img src="https://via.placeholder.com/150x80?text=加拿大" alt="加拿大合作伙伴">
+                </div>
+                <div class="partner-item">
+                    <img src="https://via.placeholder.com/150x80?text=新西兰" alt="新西兰合作伙伴">
+                </div>
+                <div class="partner-item">
+                    <img src="https://via.placeholder.com/150x80?text=俄罗斯" alt="俄罗斯合作伙伴">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 底部 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>关于我们</h3>
+                    <ul>
+                        <li><a href="#">公司简介</a></li>
+                        <li><a href="#">发展历程</a></li>
+                        <li><a href="#">企业文化</a></li>
+                        <li><a href="#">资质荣誉</a></li>
+                        <li><a href="#">联系我们</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>服务项目</h3>
+                    <ul>
+                        <li><a href="#">对外劳务合作</a></li>
+                        <li><a href="#">技能人才派遣</a></li>
+                        <li><a href="#">出国培训服务</a></li>
+                        <li><a href="#">签证及手续办理</a></li>
+                        <li><a href="#">人力资源咨询</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>成功案例</h3>
+                    <ul>
+                        <li><a href="#">澳大利亚项目</a></li>
+                        <li><a href="#">日本项目</a></li>
+                        <li><a href="#">新加坡项目</a></li>
+                        <li><a href="#">加拿大项目</a></li>
+                        <li><a href="#">新西兰项目</a></li>
+                        <li><a href="#">俄罗斯项目</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>联系我们</h3>
+                    <ul class="contact-info">
+                        <li>
+                            <i>📍</i>
+                            <span>地址：山东省青岛市市北区敦化路379号中铁青岛广场A座1522室</span>
+                        </li>
+                        <li>
+                            <i>📞</i>
+                            <span>电话：0532-81978007</span>
+                        </li>
+                        <li>
+                            <i>✉️</i>
+                            <span>邮箱：</span>
+                        </li>
+                        <li>
+                            <i>🌐</i>
+                            <span>网址：www.syndicate.cn</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Copyright © 2025 青岛悦途国际经济技术合作有限公司 版权所有 | 鲁ICP备XXXXXXXX号</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 案例筛选功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // 移除所有按钮的active类
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    // 为当前点击的按钮添加active类
+                    this.classList.add('active');
+                    
+                    // 这里可以添加实际的筛选逻辑
+                    // 例如：根据按钮的文本内容筛选案例
+                    const filterValue = this.textContent;
+                    console.log('筛选条件:', filterValue);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
