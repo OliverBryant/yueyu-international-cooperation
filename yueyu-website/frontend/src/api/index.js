@@ -34,11 +34,23 @@ api.interceptors.response.use(
 // 联系我们表单提交
 export const submitContact = (data) => api.post('/contact', data)
 
-// 获取服务项目列表
+// 获取服务项目列表（前台）
 export const getServices = () => api.get('/services')
 
-// 获取服务项目详情
+// 获取服务项目详情（前台）
 export const getServiceDetail = (id) => api.get(`/services/${id}`)
+
+// 获取服务项目列表（管理员）
+export const getAdminServices = (params = {}) => api.get('/admin/services', { params })
+
+// 添加服务项目
+export const addService = (data) => api.post('/admin/services', data)
+
+// 更新服务项目
+export const updateService = (id, data) => api.put(`/admin/services/${id}`, data)
+
+// 删除服务项目
+export const deleteService = (id) => api.delete(`/admin/services/${id}`)
 
 // 获取成功案例列表
 export const getCases = (params = {}) => api.get('/cases', { params })

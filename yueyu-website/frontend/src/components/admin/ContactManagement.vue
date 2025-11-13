@@ -158,10 +158,10 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ip" label="IP" width="120">
+        <el-table-column prop="location" label="地区" width="150">
           <template #default="scope">
-            <el-tag v-if="scope.row.ip" size="small" type="info">
-              {{ scope.row.ip }}
+            <el-tag v-if="scope.row.location" size="small" type="success">
+              📍 {{ scope.row.location }}
             </el-tag>
             <span v-else class="empty-value">--</span>
           </template>

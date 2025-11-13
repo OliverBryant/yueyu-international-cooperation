@@ -63,8 +63,11 @@
               <el-form-item label="电话" prop="phone">
                 <el-input
                   v-model="form.phone"
-                  placeholder="请输入您的手机号"
+                  placeholder="请输入11位中国大陆手机号"
                   maxlength="11"
+                  clearable
+                  @input="handlePhoneInput"
+                  @blur="handlePhoneBlur"
                 />
               </el-form-item>
               
@@ -121,13 +124,31 @@ const form = reactive({
 })
 
 const phoneValidator = (rule, value, callback) => {
-  const phoneRegex = /^1[3-9]\d{9}$/
+  // 中国大陆手机号正则表达式，支持所有合法号段
+  const phoneRegex = /^1(3[0-9]|4[01456879]|5[0-35-9]|6[2567]|7[0-8]|8[0-9]|9[0-35-9])\d{8}$/
+  
   if (!value) {
     callback(new Error('请输入手机号'))
+  } else if (!/^\d+$/.test(value)) {
+    callback(new Error('手机号只能包含数字'))
+  } else if (value.length !== 11) {
+    callback(new Error('手机号必须是11位数字'))
   } else if (!phoneRegex.test(value)) {
-    callback(new Error('请输入正确的手机号格式'))
+    callback(new Error('请输入正确的中国大陆手机号'))
   } else {
     callback()
+  }
+}
+
+const handlePhoneInput = (value) => {
+  // 只允许输入数字，自动过滤非数字字符
+  form.phone = value.replace(/\D/g, '')
+}
+
+const handlePhoneBlur = () => {
+  // 失去焦点时触发验证
+  if (formRef.value && form.phone) {
+    formRef.value.validateField('phone')
   }
 }
 
@@ -137,6 +158,7 @@ const rules = reactive({
     { min: 2, max: 50, message: '姓名长度为2-50个字符', trigger: 'blur' }
   ],
   phone: [
+    { required: true, message: '请输入手机号', trigger: 'blur' },
     { validator: phoneValidator, trigger: 'blur' }
   ],
   wechat: [
@@ -144,7 +166,7 @@ const rules = reactive({
   ],
   message: [
     { required: true, message: '请输入留言内容', trigger: 'blur' },
-    { min: 100, max: 500, message: '留言内容长度为100-500个字符', trigger: 'blur' }
+    { max: 500, message: '留言内容不能超过500个字符', trigger: 'blur' }
   ]
 })
 

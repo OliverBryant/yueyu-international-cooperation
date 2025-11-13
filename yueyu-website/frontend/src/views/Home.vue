@@ -1,16 +1,18 @@
 <template>
   <div>
     <!-- 轮播图 -->
-    <section class="banner animate-on-scroll">
-      <div class="banner-slide" style="background: linear-gradient(135deg, #1b53f2 0%, #076ce0 100%);">
-        <div class="banner-content">
-          <h2 class="animate-on-scroll">专业国际劳务合作服务</h2>
-          <p class="animate-on-scroll">成立于2020年，致力于向全球多个国家和地区派遣各类技术人员和服务人员</p>
-          <el-button type="primary" size="large" @click="$router.push('/about')" class="animate-on-scroll">
-            了解更多
-          </el-button>
-        </div>
-      </div>
+    <section class="banner">
+      <el-carousel :interval="4000" type="card" height="500px" :autoplay="true">
+        <el-carousel-item v-for="item in bannerItems" :key="item.id">
+          <div class="banner-slide" :style="{ background: item.background }">
+            <div class="banner-content">
+              <h2>{{ item.title }}</h2>
+              <p>{{ item.description }}</p>
+              <el-button type="primary" size="large" @click="item.action">{{ item.buttonText }}</el-button>
+            </div>
+          </div>
+        </el-carousel-item>
+      </el-carousel>
     </section>
 
     <!-- 关于我们 -->
@@ -103,6 +105,9 @@
         </div>
         <div class="news-container">
           <div class="news-main">
+            <div v-if="news.length === 0" class="empty-state">
+              <p>暂无新闻资讯</p>
+            </div>
             <div v-for="item in news" :key="item.id" class="news-item">
               <div class="news-date">
                 <div class="day">{{ formatDate(item.publish_date, 'DD') }}</div>
@@ -117,9 +122,12 @@
           <div class="news-sidebar">
             <div class="card news-links">
               <h3>出国指南</h3>
-              <ul>
+              <div v-if="guides.length === 0" class="empty-state">
+                <p>暂无出国指南</p>
+              </div>
+              <ul v-else>
                 <li v-for="guide in guides" :key="guide.id">
-                  <router-link :to="'/guides'">
+                  <router-link :to="'/guides'" @click="scrollToGuide(guide)">
                     {{ guide.title }}
                     <span>{{ formatDate(guide.created_at, 'YYYY-MM-DD') }}</span>
                   </router-link>
@@ -156,8 +164,11 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { getServices, getCases, getNews, getGuides, getPartners } from '../api'
 import dayjs from 'dayjs'
+
+const router = useRouter()
 
 const services = ref([])
 const cases = ref([])
@@ -165,6 +176,34 @@ const news = ref([])
 const guides = ref([])
 const partners = ref([])
 const currentFilter = ref('全部')
+
+// 轮播图数据
+const bannerItems = ref([
+  {
+    id: 1,
+    title: '专业国际劳务合作服务',
+    description: '成立于2020年，致力于向全球多个国家和地区派遣各类技术人员和服务人员',
+    background: 'linear-gradient(135deg, #1b53f2 0%, #076ce0 100%)',
+    buttonText: '了解更多',
+    action: () => router.push('/about')
+  },
+  {
+    id: 2,
+    title: '全球派遣，成就梦想',
+    description: '已成功向澳大利亚、日本、新加坡、加拿大等多个国家派遣数千名专业人才',
+    background: 'linear-gradient(135deg, #e60012 0%, #c41230 100%)',
+    buttonText: '查看成功案例',
+    action: () => router.push('/cases')
+  },
+  {
+    id: 3,
+    title: '一站式海外就业服务',
+    description: '从技能培训到境外安置，为您提供全方位的海外就业解决方案',
+    background: 'linear-gradient(135deg, #076ce0 0%, #1b53f2 100%)',
+    buttonText: '了解服务项目',
+    action: () => router.push('/services')
+  }
+])
 
 const filterCountries = ['全部', '澳大利亚', '日本', '新加坡', '新西兰', '加拿大']
 
@@ -183,8 +222,15 @@ const filterCases = (country) => {
   currentFilter.value = country
 }
 
+const scrollToGuide = (guide) => {
+  // 如果需要，可以在跳转到指南页面时滚动到特定指南
+  // 这里只是简单的导航跳转
+  return true
+}
+
 const loadData = async () => {
   try {
+    // 获取数据
     const [servicesRes, casesRes, newsRes, guidesRes, partnersRes] = await Promise.all([
       getServices(),
       getCases(),
@@ -193,11 +239,41 @@ const loadData = async () => {
       getPartners()
     ])
     
-    services.value = servicesRes.data.slice(0, 6)
-    cases.value = casesRes.data
-    news.value = newsRes.data.slice(0, 3)
-    guides.value = guidesRes.data.slice(0, 5)
-    partners.value = partnersRes.data
+    console.log('API返回的数据:', {
+      services: servicesRes,
+      news: newsRes,
+      guides: guidesRes
+    })
+    
+    // 处理服务数据
+    services.value = Array.isArray(servicesRes.data) ? servicesRes.data.slice(0, 6) : []
+    
+    // 处理案例数据
+    cases.value = Array.isArray(casesRes.data) ? casesRes.data : []
+    
+    // 处理新闻数据 - 检查数据结构
+    if (newsRes.data && newsRes.data.list) {
+      news.value = newsRes.data.list.slice(0, 3)
+    } else if (Array.isArray(newsRes.data)) {
+      news.value = newsRes.data.slice(0, 3)
+    } else {
+      news.value = []
+    }
+    
+    // 处理指南数据
+    if (guidesRes.data && Array.isArray(guidesRes.data)) {
+      guides.value = guidesRes.data.slice(0, 5)
+    } else {
+      guides.value = []
+    }
+    
+    // 处理合作伙伴数据
+    partners.value = Array.isArray(partnersRes.data) ? partnersRes.data : []
+    
+    console.log('处理后的数据:', {
+      news: news.value,
+      guides: guides.value
+    })
     
     // 数据加载完成后初始化动画
     setTimeout(initScrollAnimations, 100)
@@ -247,23 +323,10 @@ onMounted(() => {
   height: 100%;
   display: flex;
   align-items: center;
+  justify-content: center;
   position: relative;
-}
-
-.banner-slide::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23ffffff" fill-opacity="0.05"><polygon points="30 30 0 0 60 0"/></g></svg>');
-  animation: slideUp 20s linear infinite;
-}
-
-@keyframes slideUp {
-  0% { transform: translateY(100%); }
-  100% { transform: translateY(-100%); }
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 .banner-content {
@@ -274,24 +337,71 @@ onMounted(() => {
   color: #fff;
   position: relative;
   z-index: 2;
+  text-align: center;
+}
+
+/* Element Plus 轮播图自定义样式 */
+.banner :deep(.el-carousel) {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.banner :deep(.el-carousel__container) {
+  border-radius: 12px;
+}
+
+.banner :deep(.el-carousel__item) {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.banner :deep(.el-carousel__arrow) {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: none;
+  color: #1b53f2;
+  font-size: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s;
+}
+
+.banner :deep(.el-carousel__arrow:hover) {
+  background-color: #fff;
+  transform: scale(1.1);
+}
+
+.banner :deep(.el-carousel__indicator) {
+  background-color: rgba(255, 255, 255, 0.6);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  transition: all 0.3s;
+}
+
+.banner :deep(.el-carousel__indicator.is-active) {
+  background-color: #fff;
+  transform: scale(1.2);
 }
 
 .banner-content h2 {
-  font-size: 48px;
-  margin-bottom: 25px;
+  font-size: 40px;
+  margin-bottom: 20px;
   font-weight: 700;
-  animation: fadeInUp 1s ease 0.2s both;
   text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  line-height: 1.2;
 }
 
 .banner-content p {
-  font-size: 20px;
-  margin-bottom: 35px;
+  font-size: 18px;
+  margin-bottom: 30px;
   max-width: 700px;
   line-height: 1.6;
-  animation: fadeInUp 1s ease 0.4s both;
   text-shadow: 0 1px 5px rgba(0,0,0,0.2);
-  color: rgba(255,255,255,0.9);
+  color: rgba(255,255,255,0.95);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* 关于我们 */
@@ -440,6 +550,13 @@ onMounted(() => {
 
 .news-main {
   flex: 2;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+  font-size: 16px;
 }
 
 .news-sidebar {

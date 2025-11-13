@@ -21,6 +21,10 @@
               <el-icon><Newspaper /></el-icon>
               <span>新闻资讯</span>
             </div>
+            <div class="nav-item" :class="{ active: activeModule === 'services' }" @click="activeModule = 'services'">
+              <el-icon><Service /></el-icon>
+              <span>服务项目</span>
+            </div>
           </nav>
           <div class="sidebar-footer">
             <div class="user-info">
@@ -66,6 +70,11 @@
           <!-- 新闻资讯模块 -->
           <div v-else-if="activeModule === 'news'" class="module-content">
             <NewsManagement />
+          </div>
+
+          <!-- 服务项目模块 -->
+          <div v-else-if="activeModule === 'services'" class="module-content">
+            <ServiceManagement />
           </div>
         </div>
     </div>
@@ -120,6 +129,7 @@ import { getContacts, deleteContact, exportContacts } from '../../api'
 import ContactManagement from '../../components/admin/ContactManagement.vue'
 import CasesManagement from '../../components/admin/CasesManagement.vue'
 import NewsManagement from '../../components/admin/NewsManagement.vue'
+import ServiceManagement from '../../components/admin/ServiceManagement.vue'
 
 const router = useRouter()
 const activeModule = ref('contacts')
