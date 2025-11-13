@@ -36,6 +36,13 @@
           />
         </div>
       </div>
+      
+      <!-- 新闻详情弹窗 -->
+      <DetailDialog
+        v-model:visible="detailVisible"
+        :data="selectedNews"
+        type="news"
+      />
     </div>
   </div>
 </template>
@@ -44,9 +51,12 @@
 import { ref, onMounted } from 'vue'
 import { getNews } from '../api'
 import dayjs from 'dayjs'
+import DetailDialog from '../components/DetailDialog.vue'
 
 const loading = ref(false)
 const news = ref([])
+const selectedNews = ref(null)
+const detailVisible = ref(false)
 
 const pagination = ref({
   current: 1,
@@ -79,8 +89,8 @@ const loadNews = async (page = 1) => {
 }
 
 const viewDetail = (item) => {
-  // 这里可以实现跳转到新闻详情页
-  console.log('查看新闻详情:', item)
+  selectedNews.value = item
+  detailVisible.value = true
 }
 
 onMounted(() => {

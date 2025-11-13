@@ -25,11 +25,11 @@
         <div class="footer-column">
           <h3>成功案例</h3>
           <ul>
-            <li><router-link to="/cases">澳大利亚项目</router-link></li>
-            <li><router-link to="/cases">日本项目</router-link></li>
-            <li><router-link to="/cases">新加坡项目</router-link></li>
-            <li><router-link to="/cases">加拿大项目</router-link></li>
-            <li><router-link to="/cases">新西兰项目</router-link></li>
+            <li><router-link to="/cases?country=澳大利亚">澳大利亚项目</router-link></li>
+            <li><router-link to="/cases?country=日本">日本项目</router-link></li>
+            <li><router-link to="/cases?country=新加坡">新加坡项目</router-link></li>
+            <li><router-link to="/cases?country=加拿大">加拿大项目</router-link></li>
+            <li><router-link to="/cases?country=新西兰">新西兰项目</router-link></li>
           </ul>
         </div>
         <div class="footer-column">

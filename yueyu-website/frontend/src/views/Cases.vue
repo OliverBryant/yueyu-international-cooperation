@@ -22,7 +22,7 @@
       </div>
       
       <div v-else class="grid-3">
-        <div v-for="caseItem in filteredCases" :key="caseItem.id" class="card case-item">
+        <div v-for="caseItem in filteredCases" :key="caseItem.id" class="card case-item" @click="viewDetail(caseItem)">
           <div class="case-img">
             <img :src="caseItem.image || '/placeholder.jpg'" :alt="caseItem.title" v-if="false">
             <div class="placeholder-img">{{ caseItem.title }}</div>
@@ -37,19 +37,33 @@
           </div>
         </div>
       </div>
+      
+      <!-- 案例详情弹窗 -->
+      <DetailDialog
+        v-model:visible="detailVisible"
+        :data="selectedCase"
+        type="case"
+      />
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { getCases } from '../api'
+import DetailDialog from '../components/DetailDialog.vue'
+
+const route = useRoute()
+const router = useRouter()
 
 const loading = ref(false)
 const cases = ref([])
 const currentFilter = ref('全部')
+const selectedCase = ref(null)
+const detailVisible = ref(false)
 
-const filterCountries = ['全部', '澳大利亚', '日本', '新加坡', '新西兰', '加拿大', '俄罗斯']
+const filterCountries = ['全部', '澳大利亚', '日本', '新加坡', '新西兰', '加拿大']
 
 const filteredCases = computed(() => {
   if (currentFilter.value === '全部') {
@@ -60,6 +74,12 @@ const filteredCases = computed(() => {
 
 const filterCases = (country) => {
   currentFilter.value = country
+  // 更新URL参数
+  if (country === '全部') {
+    router.push({ path: '/cases' })
+  } else {
+    router.push({ path: '/cases', query: { country } })
+  }
 }
 
 const loadData = async () => {
@@ -67,12 +87,33 @@ const loadData = async () => {
     loading.value = true
     const response = await getCases()
     cases.value = response.data
+    
+    // 检查URL中是否有country参数
+    const urlCountry = route.query.country
+    if (urlCountry && filterCountries.includes(urlCountry)) {
+      currentFilter.value = urlCountry
+    }
   } catch (error) {
     console.error('加载案例失败:', error)
   } finally {
     loading.value = false
   }
 }
+
+const viewDetail = (caseItem) => {
+  selectedCase.value = caseItem
+  detailVisible.value = true
+}
+
+// 监听路由变化
+const unwatch = router.afterEach(() => {
+  const urlCountry = route.query.country
+  if (urlCountry && filterCountries.includes(urlCountry)) {
+    currentFilter.value = urlCountry
+  } else {
+    currentFilter.value = '全部'
+  }
+})
 
 onMounted(() => {
   loadData()
@@ -128,6 +169,22 @@ onMounted(() => {
   font-size: 18px;
   margin-bottom: 10px;
   color: #2c3e50;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.case-item:hover .case-content h3 {
+  color: #1b53f2;
+}
+
+.case-item {
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.case-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
 .case-content p {

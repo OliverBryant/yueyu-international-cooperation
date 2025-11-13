@@ -38,7 +38,6 @@
             <el-option label="新加坡" value="新加坡" />
             <el-option label="新西兰" value="新西兰" />
             <el-option label="加拿大" value="加拿大" />
-            <el-option label="俄罗斯" value="俄罗斯" />
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -154,7 +153,6 @@
             <el-option label="新加坡" value="新加坡" />
             <el-option label="新西兰" value="新西兰" />
             <el-option label="加拿大" value="加拿大" />
-            <el-option label="俄罗斯" value="俄罗斯" />
           </el-select>
         </el-form-item>
         <el-form-item label="雇主" prop="employer">

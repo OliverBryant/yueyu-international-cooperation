@@ -27,7 +27,7 @@
           <div class="about-text">
             <h3>青岛悦途国际经济技术合作有限公司</h3>
             <p>公司成立于2020年1月，是经国家商务部批准的从事对外劳务合作的专业公司。公司拥有《对外劳务合作（外派劳务）经营资格证书》，致力于向全球各国派遣各类工程师、技术工人、医护人员及服务人员。</p>
-            <p>自成立以来，公司已同澳大利亚、日本、新加坡、新西兰、加拿大、韩国、俄罗斯等国家和地区的相关机构、公司、协会建立了长期稳定的合作关系。</p>
+            <p>自成立以来，公司已同澳大利亚、日本、新加坡、新西兰、加拿大、韩国等国家和地区的相关机构、公司、协会建立了长期稳定的合作关系。</p>
             <el-button type="danger" @click="$router.push('/about')">了解更多</el-button>
           </div>
         </div>
@@ -166,7 +166,7 @@ const guides = ref([])
 const partners = ref([])
 const currentFilter = ref('全部')
 
-const filterCountries = ['全部', '澳大利亚', '日本', '新加坡', '新西兰', '加拿大', '俄罗斯']
+const filterCountries = ['全部', '澳大利亚', '日本', '新加坡', '新西兰', '加拿大']
 
 const filteredCases = computed(() => {
   if (currentFilter.value === '全部') {

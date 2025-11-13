@@ -33,6 +33,13 @@
             <el-button type="text" @click="viewDetail(guide)">查看详情</el-button>
           </div>
         </div>
+        
+        <!-- 指南详情弹窗 -->
+        <DetailDialog
+          v-model:visible="detailVisible"
+          :data="selectedGuide"
+          type="guide"
+        />
       </div>
     </div>
   </div>
@@ -42,10 +49,13 @@
 import { ref, onMounted, computed } from 'vue'
 import { getGuides } from '../api'
 import dayjs from 'dayjs'
+import DetailDialog from '../components/DetailDialog.vue'
 
 const loading = ref(false)
 const guides = ref([])
 const currentCategory = ref('全部')
+const selectedGuide = ref(null)
+const detailVisible = ref(false)
 
 const categories = ['全部', '签证指南', '政策解读', '就业指导', '培训指南', '生活指南']
 
@@ -65,7 +75,8 @@ const filterGuides = (category) => {
 }
 
 const viewDetail = (item) => {
-  console.log('查看指南详情:', item)
+  selectedGuide.value = item
+  detailVisible.value = true
 }
 
 const loadData = async () => {
