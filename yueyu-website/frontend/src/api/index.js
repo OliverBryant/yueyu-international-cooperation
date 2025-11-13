@@ -112,4 +112,35 @@ export const updateNews = (id, data) => api.put(`/admin/news/${id}`, data)
 // 删除新闻资讯
 export const deleteNews = (id) => api.delete(`/admin/news/${id}`)
 
+// ========== 图片上传 ==========
+
+// 上传图片
+export const uploadImage = (file) => {
+  const formData = new FormData()
+  formData.append('image', file)
+  return api.post('/admin/upload', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}
+
+// 删除图片
+export const deleteImage = (filename) => api.delete(`/admin/upload/delete/${filename}`)
+
+// 获取图片列表
+export const getImageList = () => api.get('/admin/upload/list')
+
+// 管理员合作伙伴接口
+export const getAdminPartners = (params = {}) => api.get('/admin/partners', { params })
+export const addPartner = (data) => api.post('/admin/partners', data)
+export const updatePartner = (id, data) => api.put(`/admin/partners/${id}`, data)
+export const deletePartner = (id) => api.delete(`/admin/partners/${id}`)
+
+// 管理员出国指南接口
+export const getAdminGuides = (params = {}) => api.get('/admin/guides', { params })
+export const addGuide = (data) => api.post('/admin/guides', data)
+export const updateGuide = (id, data) => api.put(`/admin/guides/${id}`, data)
+export const deleteGuide = (id) => api.delete(`/admin/guides/${id}`)
+
 export default api

@@ -13,13 +13,13 @@
           </ul>
         </div>
         <div class="footer-column">
-          <h3>服务项目</h3>
+          <h3>工作项目</h3>
           <ul>
-            <li><router-link to="/services">对外劳务合作</router-link></li>
-            <li><router-link to="/services">技能人才派遣</router-link></li>
-            <li><router-link to="/services">出国培训服务</router-link></li>
-            <li><router-link to="/services">签证及手续办理</router-link></li>
-            <li><router-link to="/services">人力资源咨询</router-link></li>
+            <li><router-link to="/services">澳大利亚工作</router-link></li>
+            <li><router-link to="/services">日本工作</router-link></li>
+            <li><router-link to="/services">新加坡工作</router-link></li>
+            <li><router-link to="/services">加拿大工作</router-link></li>
+            <li><router-link to="/services">新西兰工作</router-link></li>
           </ul>
         </div>
         <div class="footer-column">

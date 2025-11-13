@@ -13,8 +13,8 @@
       <div v-else class="partners-grid">
         <div v-for="partner in partners" :key="partner.id" class="partner-item">
           <div class="partner-logo">
-            <img :src="partner.logo || '/partner-placeholder.jpg'" :alt="partner.name" v-if="false">
-            <div class="placeholder-img">{{ partner.name }}</div>
+            <img v-if="partner.logo" :src="partner.logo" :alt="partner.name">
+            <div v-else class="placeholder-logo">{{ getCountryEmoji(partner.name) }}</div>
           </div>
           <div class="partner-info">
             <h4>{{ partner.name }}</h4>
@@ -33,6 +33,16 @@ import { getPartners } from '../api'
 
 const loading = ref(false)
 const partners = ref([])
+
+const getCountryEmoji = (partnerName) => {
+  const emojiMap = {
+    '澳大利亚劳工部': '🇦🇺',
+    '日本国际合作机构': '🇯🇵',
+    '新加坡人力部': '🇸🇬',
+    '加拿大就业与社会发展部': '🇨🇦'
+  }
+  return emojiMap[partnerName] || '🌐'
+}
 
 const loadData = async () => {
   try {
@@ -90,18 +100,27 @@ onMounted(() => {
   justify-content: center;
 }
 
-.partner-logo img,
-.placeholder-img {
+.partner-logo img {
   max-width: 100%;
   height: 80px;
   object-fit: contain;
-  background: #f0f0f0;
+}
+
+.placeholder-logo {
+  font-size: 64px;
+  width: 80px;
+  height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #999;
-  border-radius: 4px;
-  padding: 10px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12px;
+  border: 2px solid #e9ecef;
+  transition: transform 0.3s;
+}
+
+.partner-item:hover .placeholder-logo {
+  transform: scale(1.1);
 }
 
 .partner-info h4 {

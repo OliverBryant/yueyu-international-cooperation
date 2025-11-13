@@ -83,6 +83,17 @@
             <div class="description-preview">{{ scope.row.description }}</div>
           </template>
         </el-table-column>
+        <el-table-column prop="image" label="图片" width="100">
+          <template #default="scope">
+            <el-popover v-if="scope.row.image" placement="top" :width="200" trigger="hover">
+              <template #reference>
+                <img :src="scope.row.image" class="table-image" alt="图片" />
+              </template>
+              <img :src="scope.row.image" class="preview-image" alt="预览" />
+            </el-popover>
+            <span v-else class="empty-value">--</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="sort_order" label="排序" width="80" align="center">
           <template #default="scope">
             {{ scope.row.sort_order }}
@@ -166,6 +177,18 @@
             placeholder="请输入案例描述"
           />
         </el-form-item>
+        <el-form-item label="案例图片" prop="image">
+          <ImageUploader
+            v-model="imageList"
+            :limit="1"
+            :max-size="5 * 1024 * 1024"
+            @upload-success="handleImageUpload"
+            @remove="handleImageRemove"
+          />
+          <div class="image-tip" style="margin-top: 8px; font-size: 12px; color: #909399;">
+            支持 JPEG、PNG、GIF、WebP 格式，大小不超过5MB
+          </div>
+        </el-form-item>
         <el-form-item label="详细内容" prop="content">
           <el-input
             v-model="form.content"
@@ -201,6 +224,7 @@ import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { getAdminCases, addCase, updateCase, deleteCase } from '../../api'
+import ImageUploader from '../ImageUploader.vue'
 
 const router = useRouter()
 const loading = ref(false)
@@ -208,6 +232,7 @@ const saving = ref(false)
 const dialogVisible = ref(false)
 const editingCase = ref(false)
 const tableData = ref([])
+const imageList = ref([])
 
 const searchForm = reactive({
   search: '',
@@ -226,6 +251,7 @@ const form = reactive({
   country: '',
   employer: '',
   description: '',
+  image: '',
   content: '',
   result: '',
   sort_order: 0
@@ -302,17 +328,37 @@ const showAddDialog = () => {
     country: '',
     employer: '',
     description: '',
+    image: '',
     content: '',
     result: '',
     sort_order: 0
   })
+  imageList.value = []
   dialogVisible.value = true
 }
 
 const editCase = (row) => {
   editingCase.value = true
   Object.assign(form, row)
+  
+  // 设置图片列表
+  if (row.image) {
+    imageList.value = [row.image]
+  } else {
+    imageList.value = []
+  }
+  
   dialogVisible.value = true
+}
+
+// 图片上传成功处理
+const handleImageUpload = (uploadData) => {
+  form.image = uploadData.path
+}
+
+// 图片删除处理
+const handleImageRemove = () => {
+  form.image = ''
 }
 
 const saveCase = async () => {
@@ -321,6 +367,13 @@ const saveCase = async () => {
   try {
     await formRef.value.validate()
     saving.value = true
+    
+    // 设置图片数据
+    if (imageList.value.length > 0) {
+      form.image = imageList.value[0]
+    } else {
+      form.image = ''
+    }
     
     if (editingCase.value) {
       await updateCase(form.id, form)
@@ -432,5 +485,21 @@ onMounted(() => {
 .table-pagination {
   margin-top: 20px;
   text-align: right;
+}
+
+/* 图片相关样式 */
+.table-image {
+  width: 60px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.preview-image {
+  max-width: 180px;
+  max-height: 180px;
+  object-fit: contain;
+  border-radius: 4px;
 }
 </style>

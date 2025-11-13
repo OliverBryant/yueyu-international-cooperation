@@ -9,8 +9,10 @@ require('dotenv').config()
 const app = express()
 const PORT = process.env.PORT || 3001
 
-// 安全中间件
-app.use(helmet())
+// 安全中间件 - 调整配置以支持图片显示
+app.use(helmet({
+  contentSecurityPolicy: false
+}))
 
 // CORS配置
 app.use(cors({
@@ -69,6 +71,7 @@ app.use('/api', require('./routes/guides'))
 app.use('/api', require('./routes/partners'))
 app.use('/api/admin', require('./routes/admin'))
 app.use('/api/admin', require('./routes/admin-content'))
+app.use('/api/admin', require('./routes/upload'))
 
 // 静态文件服务（图片上传）
 app.use('/uploads', express.static('uploads'))

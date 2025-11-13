@@ -129,7 +129,7 @@
         </el-table-column>
         <el-table-column prop="wechat" label="微信号" width="120">
           <template #default="scope">
-            <el-tag v-if="scope.row.wechat" size="small" type="success">
+            <el-tag v-if="scope.row.wechat && scope.row.wechat.trim()" size="small" type="success">
               {{ scope.row.wechat }}
             </el-tag>
             <span v-else class="empty-value">--</span>

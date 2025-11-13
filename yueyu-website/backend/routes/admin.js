@@ -197,7 +197,7 @@ router.get('/contacts', authenticateToken, async (req, res) => {
       const location = await getIpLocation(row.ip)
       return {
         ...row,
-        wechat: row.wechat || '--',
+        wechat: row.wechat, // 保持原始值，让前端处理显示
         ip: row.ip || '--',
         location: location,
         user_agent: row.user_agent || '--'
@@ -353,9 +353,9 @@ router.get('/contacts/export', authenticateToken, async (req, res) => {
   }
 })
 
-// ========== 服务项目管理 ==========
+// ========== 工作项目管理 ==========
 
-// 获取服务项目列表（管理员）
+// 获取工作项目列表（管理员）
 router.get('/services', authenticateToken, async (req, res) => {
   try {
     const {
@@ -389,14 +389,14 @@ router.get('/services', authenticateToken, async (req, res) => {
 
     // 获取总数
     const [countResult] = await db.execute(
-      `SELECT COUNT(*) as total FROM services ${whereClause}`,
+      `SELECT COUNT(*) as total FROM jobs ${whereClause}`,
       params
     )
     const total = countResult[0].total
 
     // 获取数据
     const [rows] = await db.execute(
-      `SELECT * FROM services ${whereClause}
+      `SELECT * FROM jobs ${whereClause}
        ORDER BY ${sanitizedSort} ${sanitizedOrder}
        LIMIT ${limit} OFFSET ${offset}`,
       params
@@ -416,7 +416,7 @@ router.get('/services', authenticateToken, async (req, res) => {
     })
 
   } catch (error) {
-    console.error('获取服务项目数据错误:', error)
+    console.error('获取工作项目数据错误:', error)
     res.status(500).json({ 
       error: '获取数据失败',
       details: process.env.NODE_ENV === 'development' ? error.message : undefined
@@ -424,7 +424,7 @@ router.get('/services', authenticateToken, async (req, res) => {
   }
 })
 
-// 添加服务项目
+// 添加工作项目
 router.post('/services', authenticateToken, async (req, res) => {
   try {
     const { title, description, icon, image, content, sort_order, status } = req.body
@@ -436,20 +436,20 @@ router.post('/services', authenticateToken, async (req, res) => {
 
     // 获取当前最大排序值
     const [maxSortResult] = await db.execute(
-      'SELECT MAX(sort_order) as max_sort FROM services'
+      'SELECT MAX(sort_order) as max_sort FROM jobs'
     )
     const maxSort = maxSortResult[0].max_sort || 0
 
-    // 插入新服务项目
+    // 插入新工作项目
     const [result] = await db.execute(
-      `INSERT INTO services (title, description, icon, image, content, sort_order, status) 
+      `INSERT INTO jobs (title, description, icon, image, content, sort_order, status) 
        VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [title, description, icon || '', image || '', content || '', sort_order || maxSort + 1, status || 1]
     )
 
     res.json({
       success: true,
-      message: '服务项目添加成功',
+      message: '工作项目添加成功',
       data: {
         id: result.insertId,
         title,
@@ -463,12 +463,12 @@ router.post('/services', authenticateToken, async (req, res) => {
     })
 
   } catch (error) {
-    console.error('添加服务项目错误:', error)
-    res.status(500).json({ error: '添加服务项目失败' })
+    console.error('添加工作项目错误:', error)
+    res.status(500).json({ error: '添加工作项目失败' })
   }
 })
 
-// 更新服务项目
+// 更新工作项目
 router.put('/services/:id', authenticateToken, async (req, res) => {
   try {
     const { id } = req.params
@@ -479,19 +479,19 @@ router.put('/services/:id', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: '标题和描述不能为空' })
     }
 
-    // 检查服务项目是否存在
+    // 检查工作项目是否存在
     const [existingRows] = await db.execute(
-      'SELECT id FROM services WHERE id = ?',
+      'SELECT id FROM jobs WHERE id = ?',
       [id]
     )
 
     if (existingRows.length === 0) {
-      return res.status(404).json({ error: '服务项目不存在' })
+      return res.status(404).json({ error: '工作项目不存在' })
     }
 
-    // 更新服务项目
+    // 更新工作项目
     await db.execute(
-      `UPDATE services 
+      `UPDATE jobs 
        SET title = ?, description = ?, icon = ?, image = ?, content = ?, sort_order = ?, status = ?
        WHERE id = ?`,
       [title, description, icon || '', image || '', content || '', sort_order || 0, status || 1, id]
@@ -499,41 +499,41 @@ router.put('/services/:id', authenticateToken, async (req, res) => {
 
     res.json({
       success: true,
-      message: '服务项目更新成功'
+      message: '工作项目更新成功'
     })
 
   } catch (error) {
-    console.error('更新服务项目错误:', error)
-    res.status(500).json({ error: '更新服务项目失败' })
+    console.error('更新工作项目错误:', error)
+    res.status(500).json({ error: '更新工作项目失败' })
   }
 })
 
-// 删除服务项目
+// 删除工作项目
 router.delete('/services/:id', authenticateToken, async (req, res) => {
   try {
     const { id } = req.params
 
     const [result] = await db.execute(
-      'DELETE FROM services WHERE id = ?',
+      'DELETE FROM jobs WHERE id = ?',
       [id]
     )
 
     if (result.affectedRows === 0) {
-      return res.status(404).json({ error: '服务项目不存在' })
+      return res.status(404).json({ error: '工作项目不存在' })
     }
 
     res.json({
       success: true,
-      message: '服务项目删除成功'
+      message: '工作项目删除成功'
     })
 
   } catch (error) {
-    console.error('删除服务项目错误:', error)
-    res.status(500).json({ error: '删除服务项目失败' })
+    console.error('删除工作项目错误:', error)
+    res.status(500).json({ error: '删除工作项目失败' })
   }
 })
 
-// 导出服务项目数据
+// 导出工作项目数据
 router.get('/services/export', authenticateToken, async (req, res) => {
   try {
     const XLSX = require('xlsx')
@@ -556,7 +556,7 @@ router.get('/services/export', authenticateToken, async (req, res) => {
       `SELECT title, description, icon, image, content, 
               CASE WHEN status = 1 THEN '启用' ELSE '禁用' END as status_text,
               sort_order, created_at, updated_at
-       FROM services ${whereClause}
+       FROM jobs ${whereClause}
        ORDER BY sort_order ASC, id DESC`,
       params
     )
@@ -591,10 +591,10 @@ router.get('/services/export', authenticateToken, async (req, res) => {
       { wch: 25 }  // 更新时间
     ]
     
-    XLSX.utils.book_append_sheet(wb, ws, '服务项目数据')
+    XLSX.utils.book_append_sheet(wb, ws, '工作项目数据')
 
     // 生成文件名
-    const fileName = `服务项目数据_${new Date().toISOString().slice(0, 10)}.xlsx`
+    const fileName = `工作项目数据_${new Date().toISOString().slice(0, 10)}.xlsx`
 
     // 发送文件
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -604,8 +604,353 @@ router.get('/services/export', authenticateToken, async (req, res) => {
     res.send(buffer)
 
   } catch (error) {
-    console.error('导出服务项目数据错误:', error)
+    console.error('导出工作项目数据错误:', error)
     res.status(500).json({ error: '导出失败' })
+  }
+})
+
+// ========== 合作伙伴管理 ==========
+
+// 获取合作伙伴列表（管理员）
+router.get('/partners', authenticateToken, async (req, res) => {
+  try {
+    const {
+      page = 1,
+      size = 10,
+      sort = 'sort_order',
+      order = 'asc',
+      search = ''
+    } = req.query
+
+    const offset = (page - 1) * size
+    const limit = parseInt(size)
+
+    const allowedSortFields = ['id', 'name', 'sort_order', 'status', 'created_at']
+    const allowedOrderDirections = ['asc', 'desc']
+    
+    const sanitizedSort = allowedSortFields.includes(sort) ? sort : 'sort_order'
+    const sanitizedOrder = allowedOrderDirections.includes(order.toLowerCase()) ? order.toUpperCase() : 'ASC'
+
+    let whereConditions = []
+    let params = []
+
+    if (search) {
+      whereConditions.push('(name LIKE ? OR description LIKE ?)')
+      params.push(`%${search}%`, `%${search}%`)
+    }
+
+    const whereClause = whereConditions.length > 0 ? `WHERE ${whereConditions.join(' AND ')}` : ''
+
+    const [countResult] = await db.execute(
+      `SELECT COUNT(*) as total FROM partners ${whereClause}`,
+      params
+    )
+    const total = countResult[0].total
+
+    const [rows] = await db.execute(
+      `SELECT * FROM partners ${whereClause}
+       ORDER BY ${sanitizedSort} ${sanitizedOrder}
+       LIMIT ${limit} OFFSET ${offset}`,
+      params
+    )
+
+    res.json({
+      success: true,
+      data: {
+        list: rows,
+        pagination: {
+          current: parseInt(page),
+          size: limit,
+          total,
+          pages: Math.ceil(total / limit)
+        }
+      }
+    })
+
+  } catch (error) {
+    console.error('获取合作伙伴数据错误:', error)
+    res.status(500).json({ 
+      error: '获取数据失败',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    })
+  }
+})
+
+// 添加合作伙伴
+router.post('/partners', authenticateToken, async (req, res) => {
+  try {
+    const { name, logo, website, description, sort_order, status } = req.body
+
+    if (!name) {
+      return res.status(400).json({ error: '合作伙伴名称不能为空' })
+    }
+
+    const [maxSortResult] = await db.execute(
+      'SELECT MAX(sort_order) as max_sort FROM partners'
+    )
+    const maxSort = maxSortResult[0].max_sort || 0
+
+    const [result] = await db.execute(
+      `INSERT INTO partners (name, logo, website, description, sort_order, status) 
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [name, logo || '', website || '', description || '', sort_order || maxSort + 1, status || 1]
+    )
+
+    res.json({
+      success: true,
+      message: '合作伙伴添加成功',
+      data: {
+        id: result.insertId,
+        name,
+        logo: logo || '',
+        website: website || '',
+        description: description || '',
+        sort_order: sort_order || maxSort + 1,
+        status: status || 1
+      }
+    })
+
+  } catch (error) {
+    console.error('添加合作伙伴错误:', error)
+    res.status(500).json({ error: '添加合作伙伴失败' })
+  }
+})
+
+// 更新合作伙伴
+router.put('/partners/:id', authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params
+    const { name, logo, website, description, sort_order, status } = req.body
+
+    if (!name) {
+      return res.status(400).json({ error: '合作伙伴名称不能为空' })
+    }
+
+    const [existingRows] = await db.execute(
+      'SELECT id FROM partners WHERE id = ?',
+      [id]
+    )
+
+    if (existingRows.length === 0) {
+      return res.status(404).json({ error: '合作伙伴不存在' })
+    }
+
+    await db.execute(
+      `UPDATE partners 
+       SET name = ?, logo = ?, website = ?, description = ?, sort_order = ?, status = ?
+       WHERE id = ?`,
+      [name, logo || '', website || '', description || '', sort_order || 0, status || 1, id]
+    )
+
+    res.json({
+      success: true,
+      message: '合作伙伴更新成功'
+    })
+
+  } catch (error) {
+    console.error('更新合作伙伴错误:', error)
+    res.status(500).json({ error: '更新合作伙伴失败' })
+  }
+})
+
+// 删除合作伙伴
+router.delete('/partners/:id', authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params
+
+    const [result] = await db.execute(
+      'DELETE FROM partners WHERE id = ?',
+      [id]
+    )
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: '合作伙伴不存在' })
+    }
+
+    res.json({
+      success: true,
+      message: '合作伙伴删除成功'
+    })
+
+  } catch (error) {
+    console.error('删除合作伙伴错误:', error)
+    res.status(500).json({ error: '删除合作伙伴失败' })
+  }
+})
+
+// ========== 出国指南管理 ==========
+
+// 获取出国指南列表（管理员）
+router.get('/guides', authenticateToken, async (req, res) => {
+  try {
+    const {
+      page = 1,
+      size = 10,
+      sort = 'sort_order',
+      order = 'asc',
+      search = '',
+      category = ''
+    } = req.query
+
+    const offset = (page - 1) * size
+    const limit = parseInt(size)
+
+    const allowedSortFields = ['id', 'title', 'category', 'sort_order', 'status', 'created_at']
+    const allowedOrderDirections = ['asc', 'desc']
+    
+    const sanitizedSort = allowedSortFields.includes(sort) ? sort : 'sort_order'
+    const sanitizedOrder = allowedOrderDirections.includes(order.toLowerCase()) ? order.toUpperCase() : 'ASC'
+
+    let whereConditions = []
+    let params = []
+
+    if (search) {
+      whereConditions.push('(title LIKE ? OR content LIKE ?)')
+      params.push(`%${search}%`, `%${search}%`)
+    }
+
+    if (category) {
+      whereConditions.push('category = ?')
+      params.push(category)
+    }
+
+    const whereClause = whereConditions.length > 0 ? `WHERE ${whereConditions.join(' AND ')}` : ''
+
+    const [countResult] = await db.execute(
+      `SELECT COUNT(*) as total FROM guides ${whereClause}`,
+      params
+    )
+    const total = countResult[0].total
+
+    const [rows] = await db.execute(
+      `SELECT * FROM guides ${whereClause}
+       ORDER BY ${sanitizedSort} ${sanitizedOrder}
+       LIMIT ${limit} OFFSET ${offset}`,
+      params
+    )
+
+    res.json({
+      success: true,
+      data: {
+        list: rows,
+        pagination: {
+          current: parseInt(page),
+          size: limit,
+          total,
+          pages: Math.ceil(total / limit)
+        }
+      }
+    })
+
+  } catch (error) {
+    console.error('获取出国指南数据错误:', error)
+    res.status(500).json({ 
+      error: '获取数据失败',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    })
+  }
+})
+
+// 添加出国指南
+router.post('/guides', authenticateToken, async (req, res) => {
+  try {
+    const { title, content, category, file_url, image, sort_order, status } = req.body
+
+    if (!title) {
+      return res.status(400).json({ error: '指南标题不能为空' })
+    }
+
+    const [maxSortResult] = await db.execute(
+      'SELECT MAX(sort_order) as max_sort FROM guides'
+    )
+    const maxSort = maxSortResult[0].max_sort || 0
+
+    const [result] = await db.execute(
+      `INSERT INTO guides (title, content, category, file_url, image, sort_order, status) 
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [title, content || '', category || '', file_url || '', image || '', sort_order || maxSort + 1, status || 1]
+    )
+
+    res.json({
+      success: true,
+      message: '出国指南添加成功',
+      data: {
+        id: result.insertId,
+        title,
+        content: content || '',
+        category: category || '',
+        file_url: file_url || '',
+        image: image || '',
+        sort_order: sort_order || maxSort + 1,
+        status: status || 1
+      }
+    })
+
+  } catch (error) {
+    console.error('添加出国指南错误:', error)
+    res.status(500).json({ error: '添加出国指南失败' })
+  }
+})
+
+// 更新出国指南
+router.put('/guides/:id', authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params
+    const { title, content, category, file_url, image, sort_order, status } = req.body
+
+    if (!title) {
+      return res.status(400).json({ error: '指南标题不能为空' })
+    }
+
+    const [existingRows] = await db.execute(
+      'SELECT id FROM guides WHERE id = ?',
+      [id]
+    )
+
+    if (existingRows.length === 0) {
+      return res.status(404).json({ error: '出国指南不存在' })
+    }
+
+    await db.execute(
+      `UPDATE guides 
+       SET title = ?, content = ?, category = ?, file_url = ?, image = ?, sort_order = ?, status = ?
+       WHERE id = ?`,
+      [title, content || '', category || '', file_url || '', image || '', sort_order || 0, status || 1, id]
+    )
+
+    res.json({
+      success: true,
+      message: '出国指南更新成功'
+    })
+
+  } catch (error) {
+    console.error('更新出国指南错误:', error)
+    res.status(500).json({ error: '更新出国指南失败' })
+  }
+})
+
+// 删除出国指南
+router.delete('/guides/:id', authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params
+
+    const [result] = await db.execute(
+      'DELETE FROM guides WHERE id = ?',
+      [id]
+    )
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: '出国指南不存在' })
+    }
+
+    res.json({
+      success: true,
+      message: '出国指南删除成功'
+    })
+
+  } catch (error) {
+    console.error('删除出国指南错误:', error)
+    res.status(500).json({ error: '删除出国指南失败' })
   }
 })
 

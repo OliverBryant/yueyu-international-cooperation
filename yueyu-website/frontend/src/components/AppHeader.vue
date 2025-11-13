@@ -22,7 +22,7 @@
         <ul>
           <li><router-link to="/" :class="{ active: $route.name === 'Home' }">首页</router-link></li>
           <li><router-link to="/about" :class="{ active: $route.name === 'About' }">关于我们</router-link></li>
-          <li><router-link to="/services" :class="{ active: $route.name === 'Services' }">服务项目</router-link></li>
+          <li><router-link to="/services" :class="{ active: $route.name === 'Services' }">工作项目</router-link></li>
           <li><router-link to="/cases" :class="{ active: $route.name === 'Cases' }">成功案例</router-link></li>
           <li><router-link to="/news" :class="{ active: $route.name === 'News' }">新闻资讯</router-link></li>
           <li><router-link to="/guides" :class="{ active: $route.name === 'Guides' }">出国指南</router-link></li>

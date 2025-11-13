@@ -23,7 +23,15 @@
             </div>
             <div class="nav-item" :class="{ active: activeModule === 'services' }" @click="activeModule = 'services'">
               <el-icon><Service /></el-icon>
-              <span>服务项目</span>
+              <span>工作项目</span>
+            </div>
+            <div class="nav-item" :class="{ active: activeModule === 'partners' }" @click="activeModule = 'partners'">
+              <el-icon><Link /></el-icon>
+              <span>合作伙伴</span>
+            </div>
+            <div class="nav-item" :class="{ active: activeModule === 'guides' }" @click="activeModule = 'guides'">
+              <el-icon><Document /></el-icon>
+              <span>出国指南</span>
             </div>
           </nav>
           <div class="sidebar-footer">
@@ -76,6 +84,16 @@
           <div v-else-if="activeModule === 'services'" class="module-content">
             <ServiceManagement />
           </div>
+
+          <!-- 合作伙伴模块 -->
+          <div v-else-if="activeModule === 'partners'" class="module-content">
+            <PartnersManagement />
+          </div>
+
+          <!-- 出国指南模块 -->
+          <div v-else-if="activeModule === 'guides'" class="module-content">
+            <GuidesManagement />
+          </div>
         </div>
     </div>
 
@@ -95,7 +113,7 @@
               <span class="phone-number">{{ detailDialog.data.phone }}</span>
             </el-descriptions-item>
             <el-descriptions-item label="微信号">
-              <el-tag v-if="detailDialog.data.wechat" type="success">
+              <el-tag v-if="detailDialog.data.wechat && detailDialog.data.wechat.trim()" type="success">
                 {{ detailDialog.data.wechat }}
               </el-tag>
               <span v-else class="empty-value">未填写</span>
@@ -125,11 +143,14 @@
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { Document, Service, Link } from '@element-plus/icons-vue'
 import { getContacts, deleteContact, exportContacts } from '../../api'
 import ContactManagement from '../../components/admin/ContactManagement.vue'
 import CasesManagement from '../../components/admin/CasesManagement.vue'
 import NewsManagement from '../../components/admin/NewsManagement.vue'
 import ServiceManagement from '../../components/admin/ServiceManagement.vue'
+import PartnersManagement from '../../components/admin/PartnersManagement.vue'
+import GuidesManagement from '../../components/admin/GuidesManagement.vue'
 
 const router = useRouter()
 const activeModule = ref('contacts')
@@ -221,7 +242,10 @@ const calculateStats = () => {
   
   phoneCount.value = tableData.value.filter(item => item.phone).length
   
-  wechatCount.value = tableData.value.filter(item => item.wechat).length
+  // 只统计真正包含微信号的记录，排除 "--" 和空值
+  wechatCount.value = tableData.value.filter(item => 
+    item.wechat && item.wechat !== '--' && item.wechat.trim() !== ''
+  ).length
 }
 
 const loadData = async () => {
