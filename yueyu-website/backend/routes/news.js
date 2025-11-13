@@ -17,8 +17,7 @@ router.get('/news', async (req, res) => {
 
     // 获取数据
     const [rows] = await db.execute(
-      'SELECT * FROM news WHERE status = 1 ORDER BY publish_date DESC, id DESC LIMIT ? OFFSET ?',
-      [limit, offset]
+      `SELECT * FROM news WHERE status = 1 ORDER BY publish_date DESC, id DESC LIMIT ${limit} OFFSET ${offset}`
     )
 
     res.json({

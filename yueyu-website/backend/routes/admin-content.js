@@ -37,8 +37,8 @@ router.get('/cases', authenticateToken, async (req, res) => {
     const [rows] = await db.execute(
       `SELECT * FROM cases ${whereClause}
        ORDER BY sort_order ASC, id DESC
-       LIMIT ? OFFSET ?`,
-      [...params, limit, offset]
+       LIMIT ${limit} OFFSET ${offset}`,
+      params
     )
 
     res.json({
@@ -197,8 +197,8 @@ router.get('/news', authenticateToken, async (req, res) => {
     const [rows] = await db.execute(
       `SELECT * FROM news ${whereClause}
        ORDER BY sort_order ASC, id DESC
-       LIMIT ? OFFSET ?`,
-      [...params, limit, offset]
+       LIMIT ${limit} OFFSET ${offset}`,
+      params
     )
 
     res.json({
