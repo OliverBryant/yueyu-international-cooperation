@@ -71,14 +71,21 @@ const authenticateToken = (req, res, next) => {
 // 上传图片接口
 router.post('/upload', authenticateToken, upload.single('image'), async (req, res) => {
   try {
+    console.log('收到上传请求:', {
+      headers: req.headers,
+      file: req.file,
+      body: req.body
+    })
+
     if (!req.file) {
+      console.log('没有文件被上传')
       return res.status(400).json({ error: '没有上传文件' })
     }
 
     // 构建访问路径
     const imagePath = `/uploads/images/${req.file.filename}`
     
-    res.json({
+    const response = {
       success: true,
       message: '图片上传成功',
       data: {
@@ -89,12 +96,39 @@ router.post('/upload', authenticateToken, upload.single('image'), async (req, re
         path: imagePath,
         fullUrl: `${req.protocol}://${req.get('host')}${imagePath}`
       }
-    })
+    }
+
+    console.log('上传成功:', response)
+    res.json(response)
 
   } catch (error) {
     console.error('图片上传错误:', error)
-    res.status(500).json({ error: '图片上传失败' })
+    res.status(500).json({ 
+      error: '图片上传失败',
+      message: error.message 
+    })
   }
+})
+
+// 处理multer错误
+router.use((error, req, res, next) => {
+  if (error instanceof multer.MulterError) {
+    if (error.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).json({ error: '文件大小超过限制(5MB)' })
+    }
+    if (error.code === 'LIMIT_FILE_COUNT') {
+      return res.status(400).json({ error: '文件数量超过限制' })
+    }
+    if (error.code === 'LIMIT_UNEXPECTED_FILE') {
+      return res.status(400).json({ error: '意外的字段名，期望的是image字段' })
+    }
+  }
+  
+  console.error('Multer错误:', error)
+  res.status(400).json({ 
+    error: '文件上传失败',
+    message: error.message 
+  })
 })
 
 // 删除图片接口

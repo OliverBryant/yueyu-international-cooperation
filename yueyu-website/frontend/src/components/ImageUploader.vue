@@ -15,6 +15,7 @@
       :show-file-list="showFileList"
       :disabled="disabled"
       :class="{ 'upload-disabled': disabled }"
+      name="image"
     >
       <template #default>
         <div class="upload-trigger">
@@ -131,6 +132,9 @@ const beforeUpload = (file) => {
 
 // 上传成功
 const onSuccess = (response, uploadFile) => {
+  console.log('上传成功响应:', response)
+  
+  // 由于响应拦截器，response已经是response.data
   if (response.success) {
     const imageUrl = response.data.fullUrl || `${apiBaseURL.value}${response.data.path}`
     
