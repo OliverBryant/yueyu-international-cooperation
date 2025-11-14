@@ -165,12 +165,49 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { getServices, getCases, getNews, getGuides, getPartners } from '../api'
+import { getCases, getNews, getGuides, getPartners } from '../api'
 import dayjs from 'dayjs'
 
 const router = useRouter()
 
-const services = ref([])
+const services = ref([
+  {
+    id: 1,
+    title: '对外劳务合作',
+    description: '向境外派遣各类工程师、技术工人、医护人员及服务人员，涵盖多个行业和领域',
+    icon: '🌍'
+  },
+  {
+    id: 2,
+    title: '技能人才派遣',
+    description: '专业派遣厨师、护理人员、酒店服务人员、建筑工人等各类技能人才',
+    icon: '👨‍🍳'
+  },
+  {
+    id: 3,
+    title: '出国培训服务',
+    description: '提供语言培训、技能培训、文化适应培训等全方位出国前培训服务',
+    icon: '🎓'
+  },
+  {
+    id: 4,
+    title: '签证及手续办理',
+    description: '专业办理工作签证、护照及其他相关出国手续，确保流程顺利',
+    icon: '📝'
+  },
+  {
+    id: 5,
+    title: '人力资源咨询',
+    description: '为企业和个人提供专业的人力资源咨询服务，包括职业规划、跨国就业指导等',
+    icon: '🏢'
+  },
+  {
+    id: 6,
+    title: '境外就业安置',
+    description: '提供境外工作安排、接机、住宿安排等一站式境外就业安置服务',
+    icon: '✈️'
+  }
+])
 const cases = ref([])
 const news = ref([])
 const guides = ref([])
@@ -183,7 +220,7 @@ const bannerItems = ref([
     id: 1,
     title: '专业国际劳务合作服务',
     description: '成立于2020年，致力于向全球多个国家和地区派遣各类技术人员和服务人员',
-    background: 'linear-gradient(135deg, #1b53f2 0%, #076ce0 100%)',
+    background: 'url("https://images.unsplash.com/photo-1521791136064-7986c2920216?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80") center/cover',
     buttonText: '了解更多',
     action: () => router.push('/about')
   },
@@ -191,7 +228,7 @@ const bannerItems = ref([
     id: 2,
     title: '全球派遣，成就梦想',
     description: '已成功向澳大利亚、日本、新加坡、加拿大等多个国家派遣数千名专业人才',
-    background: 'linear-gradient(135deg, #e60012 0%, #c41230 100%)',
+    background: 'url("https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80") center/cover',
     buttonText: '查看成功案例',
     action: () => router.push('/cases')
   },
@@ -199,7 +236,7 @@ const bannerItems = ref([
     id: 3,
     title: '一站式海外就业服务',
     description: '从技能培训到境外安置，为您提供全方位的海外就业解决方案',
-    background: 'linear-gradient(135deg, #076ce0 0%, #1b53f2 100%)',
+    background: 'url("https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80") center/cover',
     buttonText: '了解服务项目',
     action: () => router.push('/services')
   }
@@ -230,9 +267,8 @@ const scrollToGuide = (guide) => {
 
 const loadData = async () => {
   try {
-    // 获取数据
-    const [servicesRes, casesRes, newsRes, guidesRes, partnersRes] = await Promise.all([
-      getServices(),
+    // 获取数据 - 服务项目使用硬编码，不需要从API获取
+    const [casesRes, newsRes, guidesRes, partnersRes] = await Promise.all([
       getCases(),
       getNews(),
       getGuides(),
@@ -240,13 +276,9 @@ const loadData = async () => {
     ])
     
     console.log('API返回的数据:', {
-      services: servicesRes,
       news: newsRes,
       guides: guidesRes
     })
-    
-    // 处理服务数据
-    services.value = Array.isArray(servicesRes.data) ? servicesRes.data.slice(0, 6) : []
     
     // 处理案例数据
     cases.value = Array.isArray(casesRes.data) ? casesRes.data : []
